@@ -53,7 +53,9 @@ h2 + .sub{margin:0 0 12px;color:var(--ink-3);font-size:13px}
 .entry h3{margin:0;font:600 16.5px/1.5 var(--sans)}
 .entry h3 a{text-decoration:none}
 .entry h3 a:hover{text-decoration:underline;text-underline-offset:3px}
-.entry p{margin:6px 0 0;color:var(--ink-2);font-size:15px;line-height:1.72}
+.entry p{margin:6px 0 0;color:var(--ink-2);font-size:15px;line-height:1.72;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden}
+.entry .why{-webkit-line-clamp:2;line-clamp:2}
 .entry .why{color:var(--ink-3);font-size:14px}
 .meta{margin-top:6px;color:var(--ink-3);font-size:13px;display:flex;flex-wrap:wrap;gap:0 14px}
 .meta .cat{color:var(--cat)}
@@ -88,6 +90,8 @@ const CATS = {
   opinion:{label:'研判观点',v:'--c-opinion'}
 };
 const ORDER = ['policy','spot','retail','green','fuel','industry','opinion'];
+// 日报只给栏目名，按行业包里 section 的叫法对回分类颜色
+const SECTION_CAT = {'政策与规则':'policy','市场运行':'spot','一次能源':'fuel','新能源与绿电':'green','行业与外部':'industry','研判与解读':'opinion'};
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '';
 const fmtDay = iso => { if(!iso) return ''; const d = new Date(iso); return isNaN(d) ? '' : `${d.getMonth()+1}月${d.getDate()}日`; };
@@ -106,8 +110,9 @@ function dailyBlock(d, today){
   h += `<p class="lead-date">${stale ? '最近一期日报：' : '今日日报：'}${esc(d.date)}${stale ? '（今天的还没出）' : ''}</p>`;
   for(const s of d.sections || []){
     if(!(s.items||[]).length) continue;
+    const sc = catStyle(SECTION_CAT[s.label]);
     h += `<h2>${esc(s.label)}</h2><ol class="list">` + s.items.map(i =>
-      `<li class="entry"><h3>${link(i.title, i.url)}</h3>${i.summary ? `<p>${esc(i.summary)}</p>` : ''}<div class="meta"><span>${esc(i.source)}</span></div></li>`).join('') + `</ol>`;
+      `<li class="entry" ${sc}><h3>${link(i.title, i.url)}</h3>${i.summary ? `<p>${esc(i.summary)}</p>` : ''}<div class="meta"><span>${esc(i.source)}</span></div></li>`).join('') + `</ol>`;
   }
   if((d.flashes||[]).length){
     h += `<h2>快讯</h2><ul class="flashes">` + d.flashes.map(f =>
