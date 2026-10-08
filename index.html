@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>电力资讯台</title>
+<meta name="description" content="电力市场、一次能源与政策的每日精选和日报快照">
+<meta name="theme-color" content="#eef1f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11161c" media="(prefers-color-scheme: dark)">
+<style>
+/* 只用系统字体：页面要在大陆网络下直接打开，不加载任何外部字体或 CDN。
+   分类颜色借电网一次接线图按电压等级着色的习惯，每条资讯左侧一根竖线标出它属于哪一类。 */
+:root{
+  --bg:#eef1f3; --paper:#f8f9fa; --ink:#1c2430; --ink-2:#4a5563; --ink-3:#7a8491;
+  --rule:#d5dbe1; --accent:#0f5f5a; --focus:#1f5fa8;
+  --c-policy:#b3122e; --c-spot:#6d2a85; --c-retail:#c4501b; --c-fuel:#9a7206;
+  --c-green:#23794e; --c-industry:#1f5fa8; --c-opinion:#68717d;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+  --sans:-apple-system,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#11161c; --paper:#171d24; --ink:#e3e8ee; --ink-2:#aeb7c2; --ink-3:#7f8a96;
+    --rule:#2a333d; --accent:#5cc2b7; --focus:#7fb2ff;
+    --c-policy:#ff6b7f; --c-spot:#c48ae0; --c-retail:#ff9a5c; --c-fuel:#e3be4f;
+    --c-green:#5fcf95; --c-industry:#6fa8ff; --c-opinion:#9aa4b0;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 var(--sans);font-variant-numeric:tabular-nums}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:2px}
+.wrap{max-width:720px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) 18px 56px}
+
+/* 报头：站名 + 日期 + 更新时间，压低存在感，把注意力让给导语 */
+.masthead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  border-bottom:2px solid var(--ink);padding-bottom:10px}
+.masthead h1{margin:0;font:600 19px/1.3 var(--serif);letter-spacing:.08em}
+.masthead .when{color:var(--ink-3);font-size:13px;text-align:right}
+
+/* 导语是全页唯一的大字：公文宋体，像一份文件摘要的第一段 */
+.lead{margin:28px 0 8px;font:500 clamp(21px,5.2vw,27px)/1.62 var(--serif);text-wrap:pretty}
+.lead-date{margin:0 0 30px;color:var(--ink-3);font-size:14px}
+.notice{margin:28px 0;padding:14px 16px;background:var(--paper);border-left:3px solid var(--accent);color:var(--ink-2);font-size:15px}
+
+h2{margin:40px 0 4px;font:600 17px/1.4 var(--serif);letter-spacing:.04em}
+h2 + .sub{margin:0 0 12px;color:var(--ink-3);font-size:13px}
+
+.list{list-style:none;margin:0;padding:0}
+.entry{position:relative;padding:14px 0 14px 16px;border-bottom:1px solid var(--rule)}
+.entry::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:2px;background:var(--cat,var(--c-opinion))}
+.entry h3{margin:0;font:600 16.5px/1.5 var(--sans)}
+.entry h3 a{text-decoration:none}
+.entry h3 a:hover{text-decoration:underline;text-underline-offset:3px}
+.entry p{margin:6px 0 0;color:var(--ink-2);font-size:15px;line-height:1.72}
+.entry .why{color:var(--ink-3);font-size:14px}
+.meta{margin-top:6px;color:var(--ink-3);font-size:13px;display:flex;flex-wrap:wrap;gap:0 14px}
+.meta .cat{color:var(--cat)}
+
+.flashes{list-style:none;margin:0;padding:0}
+.flashes li{padding:9px 0;border-bottom:1px dashed var(--rule);font-size:15px}
+.flashes a{text-decoration:none}
+.flashes .src{color:var(--ink-3);font-size:13px;margin-left:8px}
+
+/* 分类筛选：可横向滑动，色点即图例 */
+.filters{position:sticky;top:0;z-index:2;margin:0 -18px 6px;padding:10px 18px;background:var(--bg);
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters button{flex:none;font:14px/1 var(--sans);color:var(--ink-2);background:transparent;cursor:pointer;
+  border:1px solid var(--rule);border-radius:999px;padding:8px 12px;display:inline-flex;align-items:center;gap:6px}
+.filters button .dot{width:8px;height:8px;border-radius:50%;background:var(--cat,var(--ink-3))}
+.filters button[aria-pressed="true"]{color:var(--paper);background:var(--ink);border-color:var(--ink)}
+.empty{color:var(--ink-3);font-size:15px;padding:18px 0}
+
+footer{margin-top:48px;color:var(--ink-3);font-size:13px;line-height:1.8}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="wrap" id="app" aria-live="polite">
+  <header class="masthead"><h1>电力资讯台</h1><div class="when">正在读取…</div></header>
+</main>
+<script>
+const CATS = {
+  policy:{label:'政策规则',v:'--c-policy'}, spot:{label:'现货交易',v:'--c-spot'}, retail:{label:'售电零售',v:'--c-retail'},
+  fuel:{label:'一次能源',v:'--c-fuel'}, green:{label:'新能源绿电',v:'--c-green'}, industry:{label:'行业外部',v:'--c-industry'},
+  opinion:{label:'研判观点',v:'--c-opinion'}
+};
+const ORDER = ['policy','spot','retail','green','fuel','industry','opinion'];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '';
+const fmtDay = iso => { if(!iso) return ''; const d = new Date(iso); return isNaN(d) ? '' : `${d.getMonth()+1}月${d.getDate()}日`; };
+const fmtTime = iso => { if(!iso) return ''; const d = new Date(iso); if(isNaN(d)) return '';
+  return `${d.getMonth()+1}月${d.getDate()}日 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
+const catStyle = k => CATS[k] ? `style="--cat:var(${CATS[k].v})"` : '';
+const link = (title, url) => safeUrl(url) ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(title)}</a>` : esc(title);
+const leadText = lead => typeof lead === 'string' ? lead : (lead && (lead.text || lead.content)) || '';
+
+function dailyBlock(d, today){
+  if(!d) return `<p class="notice">今天的日报每天 07:30 生成，还没有出刊。下面先看最近 7 天的精选。</p>`;
+  const stale = d.date !== today;
+  let h = '';
+  const lt = leadText(d.lead);
+  h += lt ? `<p class="lead">${esc(lt)}</p>` : '';
+  h += `<p class="lead-date">${stale ? '最近一期日报：' : '今日日报：'}${esc(d.date)}${stale ? '（今天的还没出）' : ''}</p>`;
+  for(const s of d.sections || []){
+    if(!(s.items||[]).length) continue;
+    h += `<h2>${esc(s.label)}</h2><ol class="list">` + s.items.map(i =>
+      `<li class="entry"><h3>${link(i.title, i.url)}</h3>${i.summary ? `<p>${esc(i.summary)}</p>` : ''}<div class="meta"><span>${esc(i.source)}</span></div></li>`).join('') + `</ol>`;
+  }
+  if((d.flashes||[]).length){
+    h += `<h2>快讯</h2><ul class="flashes">` + d.flashes.map(f =>
+      `<li>${link(f.title, f.url)}<span class="src">${esc(f.source)}</span></li>`).join('') + `</ul>`;
+  }
+  return h;
+}
+
+function selectedBlock(items){
+  const present = ORDER.filter(k => items.some(i => i.category === k));
+  let h = `<h2>最近 7 天精选</h2><p class="sub">按收录时间排序，共 ${items.length} 条。点标题看原文。</p>`;
+  if(!items.length) return h + `<p class="empty">最近 7 天还没有入选的资讯。</p>`;
+  h += `<nav class="filters" aria-label="按分类筛选"><button type="button" data-cat="" aria-pressed="true">全部</button>` +
+    present.map(k => `<button type="button" data-cat="${k}" aria-pressed="false" ${catStyle(k)}><span class="dot"></span>${CATS[k].label}</button>`).join('') + `</nav>`;
+  h += `<ol class="list" id="sel">` + items.map(i => {
+    const c = CATS[i.category];
+    return `<li class="entry" data-cat="${esc(i.category||'')}" ${catStyle(i.category)}><h3>${link(i.title, i.url)}</h3>` +
+      (i.summary ? `<p>${esc(i.summary)}</p>` : '') + (i.reason ? `<p class="why">${esc(i.reason)}</p>` : '') +
+      `<div class="meta">${c ? `<span class="cat">${c.label}</span>` : ''}<span>${esc(i.source)}</span><span>${fmtDay(i.publishedAt)}</span></div></li>`;
+  }).join('') + `</ol>`;
+  return h;
+}
+
+function wireFilters(){
+  const btns = document.querySelectorAll('.filters button');
+  btns.forEach(b => b.addEventListener('click', () => {
+    btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    const k = b.dataset.cat;
+    document.querySelectorAll('#sel .entry').forEach(e => { e.hidden = !!k && e.dataset.cat !== k; });
+  }));
+}
+
+async function main(){
+  const app = document.getElementById('app');
+  let data;
+  try {
+    const r = await fetch('data.json?_=' + Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    data = await r.json();
+  } catch(e) {
+    app.innerHTML = `<header class="masthead"><h1>电力资讯台</h1></header><p class="notice">数据读取失败（${esc(e.message)}）。检查网络后下拉刷新；若持续失败，多半是快照还没发布。</p>`;
+    return;
+  }
+  app.innerHTML =
+    `<header class="masthead"><h1>电力资讯台</h1><div class="when">${fmtTime(data.generatedAt)} 更新<br>${esc(data.machine||'')}</div></header>` +
+    dailyBlock(data.daily, data.today) + selectedBlock(data.selected || []) +
+    `<footer>资讯由模型从交易中心、主管部门和行业媒体中筛选，摘要与推荐理由仅供快速浏览，以原文为准。</footer>`;
+  wireFilters();
+}
+main();
+</script>
+</body>
+</html>
