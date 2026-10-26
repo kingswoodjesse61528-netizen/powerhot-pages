@@ -1,9 +1,9 @@
 {
  "schema": 1,
  "site": "电力资讯台",
- "generatedAt": "2026-10-26T00:00:05+08:00",
- "machine": "Air",
- "today": "2026-10-26",
+ "generatedAt": "2026-10-27T00:01:00+08:00",
+ "machine": "mini",
+ "today": "2026-10-27",
  "daily": {
   "date": "2026-10-09",
   "generatedAt": "2026-10-08T23:30:22.756Z",
