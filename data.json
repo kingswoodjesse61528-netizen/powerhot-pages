@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "site": "电力资讯台",
- "generatedAt": "2026-11-14T00:41:11+08:00",
+ "generatedAt": "2026-11-14T01:41:16+08:00",
  "machine": "Air",
  "today": "2026-11-14",
  "daily": {
@@ -14,6 +14,17 @@
   "sections": [],
   "flashes": []
  },
- "selected": [],
+ "selected": [
+  {
+   "title": "广东电力交易中心就两项电力市场实施细则征求意见",
+   "summary": "广东电力交易中心于2026-11-13发布通知，就《广东电力市场零售交易实施细则（征求意见稿)》《广东电力中长期市场实施细则（征求意见稿)》征求意见。通知请各经营主体知悉，摘要未提供征求意见期限等具体安排。",
+   "reason": "通知同时涉及零售交易和中长期市场两项实施细则，便于广东经营主体集中了解规则征求意见安排。",
+   "category": "policy",
+   "score": 63,
+   "source": "广东电力交易中心·公众号",
+   "url": "https://mp.weixin.qq.com/s?__biz=MzI3NDY4NzE2Ng==&mid=2247522918&idx=1&sn=08faf2e26b08cf32f12c3f428379c381&chksm=ea4e53a4d9333440a1a8f75856feda656b201c04b27e5ba9132c8c71cb5206af42559a4612e9",
+   "publishedAt": "2026-11-13T11:14:18.000Z"
+  }
+ ],
  "hot": []
 }
